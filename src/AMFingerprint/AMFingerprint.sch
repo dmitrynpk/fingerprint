@@ -1,0 +1,227 @@
+EESchema Schematic File Version 4
+LIBS:AMFingerprint-cache
+EELAYER 29 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Device:LED D3
+U 1 1 5D146EF0
+P 7350 4100
+F 0 "D3" H 7343 3845 50  0000 C CNN
+F 1 "LED_BLUE" H 7343 3936 50  0000 C CNN
+F 2 "LED_THT:LED_D5.0mm_Clear" H 7350 4100 50  0001 C CNN
+F 3 "~" H 7350 4100 50  0001 C CNN
+	1    7350 4100
+	-1   0    0    1   
+$EndComp
+$Comp
+L pspice:R R3
+U 1 1 5D14D318
+P 6950 4100
+F 0 "R3" V 6745 4100 50  0000 C CNN
+F 1 "R200" V 6836 4100 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P12.70mm_Horizontal" H 6950 4100 50  0001 C CNN
+F 3 "~" H 6950 4100 50  0001 C CNN
+	1    6950 4100
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	7500 4100 8000 4100
+Wire Wire Line
+	7500 2500 8000 2500
+$Comp
+L Device:Buzzer BZ1
+U 1 1 5D14524E
+P 7400 3400
+F 0 "BZ1" H 7405 3075 50  0000 C CNN
+F 1 "Buzzer" H 7405 3166 50  0000 C CNN
+F 2 "Buzzer_Beeper:Buzzer_12x9.5RM7.6" V 7375 3500 50  0001 C CNN
+F 3 "~" V 7375 3500 50  0001 C CNN
+	1    7400 3400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L pspice:R R1
+U 1 1 5D14CAD3
+P 6950 2500
+F 0 "R1" V 6745 2500 50  0000 C CNN
+F 1 "R200" V 6836 2500 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P12.70mm_Horizontal" H 6950 2500 50  0001 C CNN
+F 3 "~" H 6950 2500 50  0001 C CNN
+	1    6950 2500
+	0    1    1    0   
+$EndComp
+$Comp
+L pspice:R R2
+U 1 1 5D14C383
+P 6950 3000
+F 0 "R2" V 7155 3000 50  0000 C CNN
+F 1 "R200" V 7064 3000 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0309_L9.0mm_D3.2mm_P12.70mm_Horizontal" H 6950 3000 50  0001 C CNN
+F 3 "~" H 6950 3000 50  0001 C CNN
+	1    6950 3000
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:LED D2
+U 1 1 5D146A44
+P 7350 3000
+F 0 "D2" H 7343 2745 50  0000 C CNN
+F 1 "LED_GREEN" H 7343 2836 50  0000 C CNN
+F 2 "LED_THT:LED_D5.0mm_Clear" H 7350 3000 50  0001 C CNN
+F 3 "~" H 7350 3000 50  0001 C CNN
+	1    7350 3000
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:LED D1
+U 1 1 5D14613A
+P 7350 2500
+F 0 "D1" H 7343 2245 50  0000 C CNN
+F 1 "LED_RED" H 7343 2336 50  0000 C CNN
+F 2 "LED_THT:LED_D5.0mm_Clear" H 7350 2500 50  0001 C CNN
+F 3 "~" H 7350 2500 50  0001 C CNN
+	1    7350 2500
+	-1   0    0    1   
+$EndComp
+$Comp
+L RF_Module:NodeMCU_v3 U1
+U 1 1 5D13FBDB
+P 4300 3100
+F 0 "U1" H 4725 3365 50  0000 C CNN
+F 1 "NodeMCU_v3" H 4725 3274 50  0000 C CNN
+F 2 "Module:NodeMCU-LoLinV3" H 4250 3900 50  0001 C CNN
+F 3 "" H 4250 3900 50  0001 C CNN
+	1    4300 3100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7500 3000 8000 3000
+Wire Wire Line
+	7500 3500 8000 3500
+$Comp
+L Connector:Conn_01x06_Male Fingerprint1
+U 1 1 5D13B6D8
+P 4650 5200
+F 0 "Fingerprint1" H 4758 5581 50  0000 C CNN
+F 1 "Conn_01x06_Male" H 4758 5490 50  0000 C CNN
+F 2 "Connector_PinSocket_2.00mm:PinSocket_1x06_P2.00mm_Vertical" H 4650 5200 50  0001 C CNN
+F 3 "~" H 4650 5200 50  0001 C CNN
+	1    4650 5200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4850 5000 8000 5000
+Wire Wire Line
+	4850 5100 5300 5100
+Wire Wire Line
+	5300 5100 5300 4300
+Wire Wire Line
+	5300 4300 5150 4300
+Wire Wire Line
+	4850 5200 5400 5200
+Wire Wire Line
+	5400 5200 5400 4200
+Wire Wire Line
+	5400 4200 5150 4200
+Wire Wire Line
+	4850 5300 5500 5300
+Wire Wire Line
+	4850 5500 5500 5500
+Wire Wire Line
+	4850 5400 5600 5400
+Wire Wire Line
+	5600 5400 5600 4000
+Wire Wire Line
+	5600 4000 5150 4000
+Wire Wire Line
+	5700 3000 6700 3000
+Wire Wire Line
+	6000 3500 7300 3500
+Wire Wire Line
+	8000 2500 8000 3000
+Connection ~ 8000 3000
+Wire Wire Line
+	8000 3000 8000 3500
+Connection ~ 8000 3500
+Wire Wire Line
+	8000 3500 8000 3700
+Connection ~ 8000 4100
+Wire Wire Line
+	8000 4100 8000 5000
+Wire Wire Line
+	5150 3700 5500 3700
+Connection ~ 8000 3700
+Wire Wire Line
+	8000 3700 8000 4100
+Wire Wire Line
+	5500 5300 5500 5500
+Wire Wire Line
+	5150 4100 6700 4100
+Wire Wire Line
+	6000 3500 6000 3900
+Wire Wire Line
+	6000 3900 5150 3900
+Wire Wire Line
+	5700 3000 5700 3800
+Wire Wire Line
+	5700 3800 5150 3800
+Wire Wire Line
+	5150 4500 5500 4500
+Wire Wire Line
+	5500 4500 5500 5300
+Connection ~ 5500 5300
+$Comp
+L Connector:Conn_01x04_Male J1
+U 1 1 5D1914C0
+P 4500 2450
+F 0 "J1" H 4608 2731 50  0000 C CNN
+F 1 "Conn_01x04_Male" H 4608 2640 50  0000 C CNN
+F 2 "Connector_PinSocket_2.00mm:PinSocket_1x04_P2.00mm_Vertical" H 4500 2450 50  0001 C CNN
+F 3 "~" H 4500 2450 50  0001 C CNN
+	1    4500 2450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5600 3500 5600 2500
+Wire Wire Line
+	5600 2500 6700 2500
+Wire Wire Line
+	5150 3500 5600 3500
+Wire Wire Line
+	4700 2350 5500 2350
+Wire Wire Line
+	5500 2350 5500 3700
+Connection ~ 5500 3700
+Wire Wire Line
+	5500 3700 8000 3700
+Wire Wire Line
+	4700 2450 5400 2450
+Wire Wire Line
+	5400 2450 5400 3600
+Wire Wire Line
+	5400 3600 5150 3600
+Wire Wire Line
+	4700 2550 5300 2550
+Wire Wire Line
+	5300 2550 5300 3200
+Wire Wire Line
+	5300 3200 5150 3200
+Wire Wire Line
+	4700 2650 5200 2650
+Wire Wire Line
+	5200 2650 5200 3300
+Wire Wire Line
+	5200 3300 5150 3300
+$EndSCHEMATC
