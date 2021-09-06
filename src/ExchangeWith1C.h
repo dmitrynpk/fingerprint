@@ -20,9 +20,7 @@ String connectTo1C() {
   const size_t numberOfHeaders = 1;
   String scannerID;
 
-DEBUG_MSG("1.1.1\n");
-
-  LedPrint("",0,0,1,true);
+  LedPrint("", 0, 0, true);
   
   String macAddress = WiFi.macAddress();
 
@@ -50,7 +48,6 @@ DEBUG_MSG("1.1.1\n");
 
         DEBUG_MSG("ScannerID: " + scannerID + "\n");
         DEBUG_MSG("Answer: " + answer + "\n");
-DEBUG_MSG("1.1.3\n");
       }
     } else {
       DEBUG_MSGF("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
@@ -60,26 +57,19 @@ DEBUG_MSG("1.1.3\n");
       delay(1000);
     }
 
-DEBUG_MSG("1.1.4\n");
     http.end();
-DEBUG_MSG("1.1.5\n");
   }
 
-DEBUG_MSG("1.1.6\n");
   LedPrint();
   
-DEBUG_MSG("1.1.7\n");
-
   return scannerID;
 }
 
 void disconnectFrom1C(String scannerID) {
 
-  DEBUG_BEGIN
-
   DEBUG_MSG("[HTTP] begin disconnectFrom1C...\n");
 
-  LedPrint("",0,0,1,true);
+  LedPrint("", 0, 0, true);
   
   boolean answer = http.begin(client, web_address + "disconnect");
   http.addHeader("Content-Type", "text/plain");
@@ -132,12 +122,11 @@ void sendFingerprintIDTo1C(int fingerprintID) {
 
   if (scannerID != "") {
 
-    DEBUG_BEGIN
     delay(100);
 
     DEBUG_MSGF("[HTTP] begin sendFingerprint...\n");
 
-    LedPrint("",0,0,1,true);
+    LedPrint("", 0, 0, true);
     
     http.begin(client, web_address + "sendFingerprintID");
     http.addHeader("Content-Type", "text/plain");
@@ -166,14 +155,14 @@ void sendFingerprintIDTo1C(int fingerprintID) {
         
         if (mark == "Начало смены") {
           
-          LedPrint("Начало\n   смены",30,0,2);
+          LedPrint("Начало\n   смены", 30, 2);
         }else {
           
-          LedPrint("Окончание\n   смены",10,0,2);
+          LedPrint("Окончание\n   смены", 10, 2);
         }
         
         delay(1000);
-        LedPrint(employee,0,0,2);
+        LedPrint(employee, 0, 2);
         delay(1000);
         LedClear();
       }
@@ -199,12 +188,11 @@ int getActionQuantityFrom1C(String scannerID, boolean allData) {
   const size_t numberOfHeaders = 1;
   String actionQuantity;
 
-  DEBUG_BEGIN
   delay(100);
 
   DEBUG_MSGF("[HTTP] begin getActionQuantity...\n");
 
-  LedPrint("",0,0,1,true);
+  LedPrint("", 0, 0, true);
   
   boolean answer = http.begin(client, web_address + "getActionQuantity");
   http.addHeader("Content-Type", "text/plain");
@@ -246,14 +234,13 @@ int getActionQuantityFrom1C(String scannerID, boolean allData) {
   return actionQuantity.toInt();
 }
 
-void sendFingerprintTo1C(String scannerID, String employee, uint8_t fingerprintID, uint8_t* fingerTemplate, boolean success) {
+void sendFingerprintTo1C(String scannerID, String employee, uint8_t fingerprintID, boolean success) {
 
-  DEBUG_BEGIN
   delay(100);
 
   DEBUG_MSGF("[HTTP] begin sendFingerprint...\n");
 
-  LedPrint("",0,0,1,true);
+  LedPrint("", 0, 0, true);
   
   http.begin(client, web_address + "sendFingerprint");
   http.addHeader("Content-Type", "application/octet-stream");
@@ -265,7 +252,7 @@ void sendFingerprintTo1C(String scannerID, String employee, uint8_t fingerprintI
   http.addHeader("Success", success == true ? "true" : "false");
   http.setTimeout(10000);
 
-  int httpCode = http.POST(fingerTemplate, 256);
+  int httpCode = http.POST("OK");
 
   if (httpCode > 0) {
     // HTTP header has been send and Server response header has been handled
@@ -294,7 +281,7 @@ void sendFingerprintDeleted(String scannerID, String employee, String fingerprin
 
   DEBUG_MSGF("[HTTP] begin sendFingerprintDeleted...\n");
 
-  LedPrint("",0,0,1,true);
+  LedPrint("", 0, 0, true);
   
   http.begin(client, web_address + "sendFingerprintDeleted");
   http.addHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -328,7 +315,7 @@ void sendFingerprintScannerCleaned(String scannerID) {
 
   DEBUG_MSGF("[HTTP] begin sendFingerprintScannerCleaned...\n");
 
-  LedPrint("",0,0,1,true);
+  LedPrint("", 0, 0, true);
   
   http.begin(client, web_address + "sendFingerprintScannerCleaned");
   http.addHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -366,11 +353,9 @@ void getNextActionFrom1C(String scannerID, boolean allData) {
   String employeeID;
   String fingerprintID;
 
-  DEBUG_BEGIN
-
   DEBUG_MSGF("[HTTP] begin getNextAction...\n");
 
-  LedPrint("",0,0,1,true);
+  LedPrint("", 0, 0, true);
   
   boolean answer = http.begin(client, web_address + "getNextAction");
   http.addHeader("Content-Type", "text/plain");
@@ -378,8 +363,6 @@ void getNextActionFrom1C(String scannerID, boolean allData) {
   http.addHeader("allData", allData == true ? "true" : "false");
   http.collectHeaders(headerKeys, numberOfHeaders);
   http.setTimeout(10000);
-
-  uint8_t fingerTemplate[256];
 
   if (answer == true) {
 
@@ -401,23 +384,6 @@ void getNextActionFrom1C(String scannerID, boolean allData) {
         DEBUG_MSG("Employee: " + employee + "\n");
         DEBUG_MSG("FingerprintID: " + fingerprintID + "\n");
 
-        if (action == "Add") {
-
-          WiFiClient data = http.getStream();
-          data.readBytes(fingerTemplate, 256);
-
-          int m = -1;
-          for (int i = 0; i < 256; ++i) {
-            m++;
-            if (m == 16) {
-              m = 0;
-              DEBUG_MSG("\n");
-            }
-            printHex(fingerTemplate[i], 2);
-          }
-          DEBUG_MSG("\ndone.\n");
-        }
-
       }
     } else {
       DEBUG_MSGF("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
@@ -431,13 +397,14 @@ void getNextActionFrom1C(String scannerID, boolean allData) {
       uint8_t answerID;
 
       if (action == "New") {
+        
+        finger.begin(57600);
+        finger.LEDcontrol(FINGERPRINT_LED_ON, 0, FINGERPRINT_LED_BLUE);
 
         LedPrint("Сканирование\nотпечатка пальца:\n" + employee, 0, 0, 1);
         delay(1000);
-
-        uint8_t fingerTemplate[256];
-
-        boolean success = readFingerprintEnroll(fingerprintID.toInt(), fingerTemplate);
+        
+        boolean success = readFingerprintEnroll(fingerprintID.toInt());
 
         if (success == true){
           LedPrint("Отпечаток успешно\nзаписан");
@@ -446,22 +413,11 @@ void getNextActionFrom1C(String scannerID, boolean allData) {
         }
         delay(1000);
         
-        sendFingerprintTo1C(scannerID, employeeID, fingerprintID.toInt(), fingerTemplate, success);
+        sendFingerprintTo1C(scannerID, employeeID, fingerprintID.toInt(), success);
 
         LedClear();
 
-      } else if (action == "Add") {
-
-        answer = writeFingerprint(fingerprintID.toInt(), fingerTemplate);
-
-        DEBUG_BEGIN
-        delay(100);
-
-        if (answer != FINGERPRINT_OK) {
-          DEBUG_MSGF("\nError #%d\n", answer);
-        } else {
-          DEBUG_MSG("\nOK\n");
-        }
+        finger.LEDcontrol(FINGERPRINT_LED_OFF, 0, FINGERPRINT_LED_BLUE);
 
       } else if (action == "Del") {
 
@@ -489,15 +445,11 @@ void getActionFrom1C(boolean allData) {
   String scannerID;
   int actionQuantity;
   
-DEBUG_MSG("1.1'\n");
   scannerID = connectTo1C();
-DEBUG_MSG("1.2'\n");
 
   if (scannerID == "") {
 
-DEBUG_MSG("1.3'\n");
     scannerID = connectTo1C();
-DEBUG_MSG("1.4'\n");
   }
 
   if (scannerID != "") {

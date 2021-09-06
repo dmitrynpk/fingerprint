@@ -6,9 +6,11 @@
 #include "Other.h"
 #include "ExchangeWith1C.h"
 
-Adafruit_Fingerprint finger = Adafruit_Fingerprint(&Serial);
+SoftwareSerial mySerial(2, 3);
 
-uint8_t getFingerprintIDez() {
+Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
+
+uint8_t getFingerprintID() {
 
   finger.begin(57600);
   
@@ -18,7 +20,7 @@ uint8_t getFingerprintIDez() {
   p = finger.image2Tz();
   if (p != FINGERPRINT_OK)  return -2;
   
-  p = finger.fingerFastSearch();
+  p = finger.fingerSearch();
   if (p != FINGERPRINT_OK)  return -3;
   
   return finger.fingerID; 
@@ -29,7 +31,6 @@ uint8_t getFingerprintEnroll(int fingerprintID) {
   uint8_t p;
   uint32_t starttime;
 
-  DEBUG_BEGIN
   DEBUG_MSG("fingerprintRead: ");
   DEBUG_MSG(fingerprintRead);
   DEBUG_MSG("\n");
@@ -134,64 +135,7 @@ uint8_t getFingerprintEnroll(int fingerprintID) {
   return p;
 }
 
-uint8_t downloadFingerprintTemplate(uint16_t fingerprintID) {
-
-  uint8_t p;
-
-  finger.begin(57600);
-  
-  p = finger.loadModel(fingerprintID);
-  if (p != FINGERPRINT_OK) {
-    return p;
-  }
-  
-  p = finger.getModel();
-  if (p != FINGERPRINT_OK) {
-    return p;
-  }
-
-  return p;
-}
-
-uint8_t writeFingerprint(uint16_t fingerprintID, uint8_t* fingerTemplate) {
-
-  finger.begin(57600);
-  
-  uint8_t p;
-  
-  p = finger.sendModel();
-  if (p != FINGERPRINT_OK) {
-    return p;
-  }
-  
-  uint32_t starttime = millis();
-  int i = 0;
-  while (i < 512 && (millis() - starttime) < 20000) {
-      if (Serial.available()) {
-          Serial.write(fingerTemplate[i++]);
-      }
-  }
-  
-  DEBUG_BEGIN
-  delay(100);
-
-  int m = -1;
-  for (int i = 0; i < 512; ++i) {
-    m++;
-    if (m==16) {
-      m=0;
-      DEBUG_MSG("\n");
-    }
-    printHex(fingerTemplate[i], 2);
-  }
-  DEBUG_MSG("\ndone.\n");
-  delay(100);
-
-  return p;
-  
-}
-
-boolean readFingerprintEnroll(uint16_t fingerprintID, uint8_t* fingerTemplate) {//Прочитать новый отпечаток пальца в сканер
+boolean readFingerprintEnroll(uint16_t fingerprintID) {//Прочитать новый отпечаток пальца в сканер
   
   uint8_t answerID = 0;
   
@@ -208,54 +152,18 @@ boolean readFingerprintEnroll(uint16_t fingerprintID, uint8_t* fingerTemplate) {
      return false;
   }
   
-  answerID = downloadFingerprintTemplate(fingerprintID);
-  
-  // one data packet is 267 bytes. in one data packet, 11 bytes are 'usesless' :D
-  uint8_t bytesReceived[534]; // 2 data packets
-  
-  uint32_t starttime = millis();
-  int i = 0;
-  while (i < 534 && (millis() - starttime) < 20000) {
-      if (Serial.available()) {
-          bytesReceived[i++] = Serial.read();
-      }
-  }
-  
-  // filtering only the data packets
-  int uindx = 9, index = 0;
-  while (index < 534) {
-      while (index < uindx) ++index;
-      uindx += 256;
-      while (index < uindx) {
-          fingerTemplate[index++] = bytesReceived[index];
-      }
-      uindx += 2;
-      while (index < uindx) ++index;
-      uindx = index + 9;
-  }
-  
-  DEBUG_BEGIN
-  delay(100);
-
-  int m = -1;
-  for (int i = 0; i < 512; ++i) {
-    m++;
-    if (m==16) {
-      m=0;
-      DEBUG_MSG("\n");
-    }
-    printHex(fingerTemplate[i], 2);
-  }
-  DEBUG_MSG("\ndone.\n");
-  delay(100);
-
   return true;
 }
 
 int readFingerprintIDez() {//Чтение идентификатора отпечатка пальца
   
-  int fingerprintID = getFingerprintIDez();
+  int fingerprintID = getFingerprintID();
   int confidence    = finger.confidence;
+
+  DEBUG_MSG("readFingerprintIDez:\n");
+  DEBUG_MSGF("  fingerprintID: %d\n", fingerprintID);
+  DEBUG_MSGF("  confidence: %d\n", confidence);
+
 
   if (confidence < 100 || fingerprintID > FINGERPRINT_SCANNER_CAPACITY) {
 
@@ -289,11 +197,5 @@ uint8_t clearFingerprintScanner() {//Очистка сканера
   uint8_t answerID = finger.emptyDatabase();
 
   return answerID;
-}
-
-ISR_PREFIX void fingerprintState() {
-  fingerprintRead = true;
-//  Serial.print("fingerprintRead: ");
-//  Serial.println(fingerprintRead);
 }
 #endif
