@@ -84,7 +84,7 @@ uint8_t getFingerprintEnroll(int fingerprintID) {
   
   //Считываем изображение повторно
 
-  LedPrint("Повторно\nприложите палец");
+  LedPrint("Повторно приложите\nпалец");
 
   p         = -1;
   starttime = millis();

@@ -155,10 +155,10 @@ void sendFingerprintIDTo1C(int fingerprintID) {
         
         if (mark == "Начало смены") {
           
-          LedPrint("Начало\n   смены", 30, 2);
+          LedPrint("Начало смены", 30, 2);
         }else {
           
-          LedPrint("Окончание\n   смены", 10, 2);
+          LedPrint("Окончание смены", 10, 2);
         }
         
         delay(1000);
@@ -401,7 +401,7 @@ void getNextActionFrom1C(String scannerID, boolean allData) {
         finger.begin(57600);
         finger.LEDcontrol(FINGERPRINT_LED_ON, 0, FINGERPRINT_LED_BLUE);
 
-        LedPrint("Сканирование\nотпечатка пальца:\n" + employee, 0, 0, 1);
+        LedPrint("Сканирование отпечатка\nпальца:\n" + employee, 0, 0, 1);
         delay(1000);
         
         boolean success = readFingerprintEnroll(fingerprintID.toInt());

@@ -69,7 +69,7 @@ void run_WiFi_STA() {
   stateWiFiBlink = true;
   updateDate.attach(3600, updateDateFrom1C);
 
-  LedPrint("Подключено: " + WiFi.localIP().toString());
+  LedPrint("Подключено:\n" + WiFi.localIP().toString());
   delay(1000);
   LedClear();
   

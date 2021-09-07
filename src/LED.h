@@ -46,7 +46,7 @@ void LedPrint(String S = "", int x = 0, int y = 0, boolean stateUpdateFrom1C = f
   
   display.setFont(ArialRus_Plain_10);
   
-  display.drawString(0, 20, S);
+  display.drawString(0, 10, S);
   display.display();
 }
 

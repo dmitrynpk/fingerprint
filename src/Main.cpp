@@ -24,7 +24,7 @@
 #define SSID_DEFAULT "FingerprintAP"
 #define PASS_DEFAULT ""
 
-#define ISR_PREFIX ICACHE_RAM_ATTR
+#define ISR_PREFIX IRAM_ATTR
 
 ESP8266WebServer webServer(80);
 Ticker ticker;
@@ -101,7 +101,7 @@ void setup()
     webServer.on("/", std::bind(serverAdmin, &webServer));
     webServer.begin();
 
-    LedPrint("Подключитесь к Wi-Fi '" SSID_DEFAULT "' и\nзайдите на страницу\nhttp://192.168.4.1");
+    LedPrint("Подключитесь к Wi-Fi\n'" SSID_DEFAULT "' и\nзайдите на страницу\nhttp://192.168.4.1");
   }
   else
   {
@@ -143,48 +143,43 @@ void loop()
   }
   else
   {
-
     if (makeRequestIn1C == true)
     {
-
       getActionFrom1C(true);
       makeRequestIn1C = false;
     }
     else if (makeRequestOnSheduleIn1C == true)
     {
-
       getActionFrom1C(false);
       makeRequestOnSheduleIn1C = false;
     }
     else if (fingerprintRead == true)
     {
-
       int fingerprintID = readFingerprintIDez();
 
       if (fingerprintID < 0)
       {
-
         finger.LEDcontrol(FINGERPRINT_LED_ON, 0, FINGERPRINT_LED_RED);
-        LedPrint("Отказ", 40, 30);
+        LedPrint("Отказ (" + String(finger.confidence) + ")", 40, 30);
         beeper(2);
         delay(1000);
         finger.LEDcontrol(FINGERPRINT_LED_OFF, 0, FINGERPRINT_LED_RED);
       }
       else
       {
-
+        finger.LEDcontrol(FINGERPRINT_LED_ON, 0, FINGERPRINT_LED_BLUE);
+        beeper(2);
+        delay(1000);
+        finger.LEDcontrol(FINGERPRINT_LED_OFF, 0, FINGERPRINT_LED_BLUE);
         sendFingerprintIDTo1C(fingerprintID);
       }
-
       fingerprintRead = false;
     }
 
     if (WiFi.status() != WL_CONNECTED)
     {
-
       run_WiFi_STA();
     }
-
     LedPrint();
   }
   delay(100);
