@@ -168,7 +168,7 @@ void loop()
       else
       {
         finger.LEDcontrol(FINGERPRINT_LED_ON, 0, FINGERPRINT_LED_BLUE);
-        beeper(2);
+        beeper(1);
         delay(1000);
         finger.LEDcontrol(FINGERPRINT_LED_OFF, 0, FINGERPRINT_LED_BLUE);
         sendFingerprintIDTo1C(fingerprintID);
