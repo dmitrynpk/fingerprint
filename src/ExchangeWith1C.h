@@ -29,6 +29,7 @@ String connectTo1C() {
   boolean answer = http.begin(client, web_address + "connect");
   http.addHeader("Content-Type", "text/plain");
   http.addHeader("MAC-address", macAddress);
+  http.addHeader("Capacity", String(finger.capacity));
   http.collectHeaders(headerKeys, numberOfHeaders);
   http.setTimeout(10000);
 

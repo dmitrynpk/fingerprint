@@ -19,8 +19,6 @@
 #define PIN_BUZZER D6
 #define PIN_FINGERPRINT_STATE D7
 
-#define FINGERPRINT_SCANNER_CAPACITY 150
-
 #define SSID_DEFAULT "FingerprintAP"
 #define PASS_DEFAULT ""
 

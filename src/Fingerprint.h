@@ -161,11 +161,12 @@ int readFingerprintIDez() {//Чтение идентификатора отпе�
   int confidence    = finger.confidence;
 
   DEBUG_MSG("readFingerprintIDez:\n");
+  DEBUG_MSGF("  finger capacity: %d\n", finger.capacity);
   DEBUG_MSGF("  fingerprintID: %d\n", fingerprintID);
   DEBUG_MSGF("  confidence: %d\n", confidence);
 
 
-  if (confidence < 100 || fingerprintID > FINGERPRINT_SCANNER_CAPACITY) {
+  if (confidence < 50 || fingerprintID >= finger.capacity) {
 
     fingerprintID = -1;
   }
