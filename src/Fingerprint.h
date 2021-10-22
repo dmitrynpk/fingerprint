@@ -169,7 +169,7 @@ int readFingerprintIDez() {//Чтение идентификатора отпе�
     
     fingerprintID = -1;
 
-  } else if (confidence < 10) {
+  } else if (confidence < 25) {
 
     fingerprintID = -1 * confidence;
   }
