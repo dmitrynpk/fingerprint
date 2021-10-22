@@ -24,7 +24,9 @@ String connectTo1C() {
   
   String macAddress = WiFi.macAddress();
 
-  DEBUG_MSG("[HTTP] begin connectTo1C...\n" + macAddress + "\n");
+  DEBUG_MSG("connectTo1C. [HTTP] begin connectTo1C...\n");
+  DEBUG_MSG("connectTo1C. macAddress: " + macAddress + "\n");
+  DEBUG_MSGF("connectTo1C. Finger capacity: %d\n", finger.capacity);
 
   boolean answer = http.begin(client, web_address + "connect");
   http.addHeader("Content-Type", "text/plain");
@@ -39,7 +41,7 @@ String connectTo1C() {
 
     if (httpCode > 0) {
       // HTTP header has been send and Server response header has been handled
-      DEBUG_MSGF("[HTTP] GET... code: %d\n", httpCode);
+      DEBUG_MSGF("connectTo1C. [HTTP] GET... code: %d\n", httpCode);
 
       // file found at server
       if (httpCode == HTTP_CODE_OK) {
@@ -47,11 +49,11 @@ String connectTo1C() {
         scannerID     = http.header("ScannerID");
         String answer = http.getString();
 
-        DEBUG_MSG("ScannerID: " + scannerID + "\n");
-        DEBUG_MSG("Answer: " + answer + "\n");
+        DEBUG_MSG("connectTo1C. ScannerID: " + scannerID + "\n");
+        DEBUG_MSG("connectTo1C. Answer: " + answer + "\n");
       }
     } else {
-      DEBUG_MSGF("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+      DEBUG_MSGF("connectTo1C. [HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
       
       LedPrint("Ошибка отправки данных");
       beeper(2);
@@ -68,7 +70,7 @@ String connectTo1C() {
 
 void disconnectFrom1C(String scannerID) {
 
-  DEBUG_MSG("[HTTP] begin disconnectFrom1C...\n");
+  DEBUG_MSG("disconnectFrom1C. [HTTP] begin disconnectFrom1C...\n");
 
   LedPrint("", 0, 0, true);
   
@@ -85,7 +87,7 @@ void disconnectFrom1C(String scannerID) {
 
     if (httpCode > 0) {
       // HTTP header has been send and Server response header has been handled
-      DEBUG_MSGF("[HTTP] GET... code: %d\n", httpCode);
+      DEBUG_MSGF("disconnectFrom1C. [HTTP] GET... code: %d\n", httpCode);
 
       // file found at server
       if (httpCode == HTTP_CODE_OK) {
@@ -94,10 +96,10 @@ void disconnectFrom1C(String scannerID) {
         
         String answer  = http.getString();
         
-        DEBUG_MSG("Answer: " + answer + "\n");
+        DEBUG_MSG("disconnectFrom1C. Answer: " + answer + "\n");
       }
     } else {
-      DEBUG_MSGF("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+      DEBUG_MSGF("disconnectFrom1C. [HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
       
       LedPrint("Ошибка отправки данных");
       beeper(2);
@@ -125,7 +127,7 @@ void sendFingerprintIDTo1C(int fingerprintID) {
 
     delay(100);
 
-    DEBUG_MSGF("[HTTP] begin sendFingerprint...\n");
+    DEBUG_MSGF("sendFingerprintIDTo1C. [HTTP] begin sendFingerprint...\n");
 
     LedPrint("", 0, 0, true);
     
@@ -140,7 +142,7 @@ void sendFingerprintIDTo1C(int fingerprintID) {
 
     if (httpCode > 0) {
       // HTTP header has been send and Server response header has been handled
-      DEBUG_MSGF("[HTTP] GET... code: %d\n", httpCode);
+      DEBUG_MSGF("sendFingerprintIDTo1C. [HTTP] GET... code: %d\n", httpCode);
 
       // file found at server
       if (httpCode == HTTP_CODE_OK) {
@@ -148,9 +150,9 @@ void sendFingerprintIDTo1C(int fingerprintID) {
         String mark     = urlDecode(http.header("Mark"));
         String employee = urlDecode(http.header("Employee"));
         String answer   = http.getString();
-        DEBUG_MSG("Mark: " + mark + "\n");
-        DEBUG_MSG("Employee: " + employee + "\n");
-        DEBUG_MSG("Answer: " + answer + "\n");
+        DEBUG_MSG("sendFingerprintIDTo1C. Mark: " + mark + "\n");
+        DEBUG_MSG("sendFingerprintIDTo1C. Employee: " + employee + "\n");
+        DEBUG_MSG("sendFingerprintIDTo1C. Answer: " + answer + "\n");
         
         beeper(1);
         
@@ -168,7 +170,7 @@ void sendFingerprintIDTo1C(int fingerprintID) {
         LedClear();
       }
     } else {
-      DEBUG_MSGF("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+      DEBUG_MSGF("sendFingerprintIDTo1C. [HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
       
       LedPrint("Ошибка отправки данных");
       beeper(2);
@@ -191,7 +193,7 @@ int getActionQuantityFrom1C(String scannerID, boolean allData) {
 
   delay(100);
 
-  DEBUG_MSGF("[HTTP] begin getActionQuantity...\n");
+  DEBUG_MSGF("getActionQuantityFrom1C. [HTTP] begin getActionQuantity...\n");
 
   LedPrint("", 0, 0, true);
   
@@ -208,7 +210,7 @@ int getActionQuantityFrom1C(String scannerID, boolean allData) {
 
     if (httpCode > 0) {
       // HTTP header has been send and Server response header has been handled
-      DEBUG_MSGF("[HTTP] GET... code: %d\n", httpCode);
+      DEBUG_MSGF("getActionQuantityFrom1C. [HTTP] GET... code: %d\n", httpCode);
 
       // file found at server
       if (httpCode == HTTP_CODE_OK) {
@@ -216,11 +218,11 @@ int getActionQuantityFrom1C(String scannerID, boolean allData) {
         actionQuantity = http.header("ActionQuantity");
         String answer  = http.getString();
 
-        DEBUG_MSG("ActionQuantity: " + actionQuantity + "\n");
-        DEBUG_MSG("Answer: " + answer + "\n");
+        DEBUG_MSG("getActionQuantityFrom1C. ActionQuantity: " + actionQuantity + "\n");
+        DEBUG_MSG("getActionQuantityFrom1C. Answer: " + answer + "\n");
       }
     } else {
-      DEBUG_MSGF("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+      DEBUG_MSGF("getActionQuantityFrom1C. [HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
       
       LedPrint("Ошибка отправки данных");
       beeper(2);
@@ -239,7 +241,7 @@ void sendFingerprintTo1C(String scannerID, String employee, uint8_t fingerprintI
 
   delay(100);
 
-  DEBUG_MSGF("[HTTP] begin sendFingerprint...\n");
+  DEBUG_MSGF("sendFingerprintTo1C. [HTTP] begin sendFingerprint...\n");
 
   LedPrint("", 0, 0, true);
   
@@ -257,16 +259,16 @@ void sendFingerprintTo1C(String scannerID, String employee, uint8_t fingerprintI
 
   if (httpCode > 0) {
     // HTTP header has been send and Server response header has been handled
-    DEBUG_MSGF("[HTTP] POST... code: %d\n", httpCode);
+    DEBUG_MSGF("sendFingerprintTo1C. [HTTP] POST... code: %d\n", httpCode);
 
     // file found at server
     if (httpCode == HTTP_CODE_OK) {
 
       String answer  = http.getString();
-      DEBUG_MSG("Answer: " + answer + "\n");
+      DEBUG_MSG("sendFingerprintTo1C. Answer: " + answer + "\n");
     }
   } else {
-    DEBUG_MSGF("[HTTP] POST... failed, error: %s\n", http.errorToString(httpCode).c_str());
+    DEBUG_MSGF("sendFingerprintTo1C. [HTTP] POST... failed, error: %s\n", http.errorToString(httpCode).c_str());
     
     LedPrint("Ошибка отправки данных");
     beeper(2);
@@ -280,7 +282,7 @@ void sendFingerprintTo1C(String scannerID, String employee, uint8_t fingerprintI
 
 void sendFingerprintDeleted(String scannerID, String employee, String fingerprintID) {
 
-  DEBUG_MSGF("[HTTP] begin sendFingerprintDeleted...\n");
+  DEBUG_MSGF("sendFingerprintDeleted. [HTTP] begin sendFingerprintDeleted...\n");
 
   LedPrint("", 0, 0, true);
   
@@ -295,16 +297,16 @@ void sendFingerprintDeleted(String scannerID, String employee, String fingerprin
 
   if (httpCode > 0) {
     // HTTP header has been send and Server response header has been handled
-    DEBUG_MSGF("[HTTP] GET... code: %d\n", httpCode);
+    DEBUG_MSGF("sendFingerprintDeleted. [HTTP] GET... code: %d\n", httpCode);
 
     // file found at server
     if (httpCode == HTTP_CODE_OK) {
 
       String answer  = http.getString();
-      DEBUG_MSG("Answer: " + answer + "\n");
+      DEBUG_MSG("sendFingerprintDeleted. Answer: " + answer + "\n");
     }
   } else {
-    DEBUG_MSGF("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+    DEBUG_MSGF("sendFingerprintDeleted. [HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
   }
 
   http.end();
@@ -314,7 +316,7 @@ void sendFingerprintDeleted(String scannerID, String employee, String fingerprin
 
 void sendFingerprintScannerCleaned(String scannerID) {
 
-  DEBUG_MSGF("[HTTP] begin sendFingerprintScannerCleaned...\n");
+  DEBUG_MSGF("sendFingerprintScannerCleaned. [HTTP] begin sendFingerprintScannerCleaned...\n");
 
   LedPrint("", 0, 0, true);
   
@@ -327,16 +329,16 @@ void sendFingerprintScannerCleaned(String scannerID) {
 
   if (httpCode > 0) {
     // HTTP header has been send and Server response header has been handled
-    DEBUG_MSGF("[HTTP] GET... code: %d\n", httpCode);
+    DEBUG_MSGF("sendFingerprintScannerCleaned. [HTTP] GET... code: %d\n", httpCode);
 
     // file found at server
     if (httpCode == HTTP_CODE_OK) {
 
       String answer  = http.getString();
-      DEBUG_MSG("Answer: " + answer + "\n");
+      DEBUG_MSG("sendFingerprintScannerCleaned. Answer: " + answer + "\n");
     }
   } else {
-    DEBUG_MSGF("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+    DEBUG_MSGF("sendFingerprintScannerCleaned. [HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
   }
 
   http.end();
@@ -354,7 +356,7 @@ void getNextActionFrom1C(String scannerID, boolean allData) {
   String employeeID;
   String fingerprintID;
 
-  DEBUG_MSGF("[HTTP] begin getNextAction...\n");
+  DEBUG_MSGF("getNextActionFrom1C. [HTTP] begin getNextAction...\n");
 
   LedPrint("", 0, 0, true);
   
@@ -371,7 +373,7 @@ void getNextActionFrom1C(String scannerID, boolean allData) {
 
     if (httpCode > 0) {
       // HTTP header has been send and Server response header has been handled
-      DEBUG_MSGF("[HTTP] GET... code: %d\n", httpCode);
+      DEBUG_MSGF("getNextActionFrom1C. [HTTP] GET... code: %d\n", httpCode);
 
       // file found at server
       if (httpCode == HTTP_CODE_OK) {
@@ -381,13 +383,13 @@ void getNextActionFrom1C(String scannerID, boolean allData) {
         employeeID    = http.header("EmployeeID");
         fingerprintID = http.header("FingerprintID");
 
-        DEBUG_MSG("Action: " + action + "\n");
-        DEBUG_MSG("Employee: " + employee + "\n");
-        DEBUG_MSG("FingerprintID: " + fingerprintID + "\n");
+        DEBUG_MSG("getNextActionFrom1C. Action: " + action + "\n");
+        DEBUG_MSG("getNextActionFrom1C. Employee: " + employee + "\n");
+        DEBUG_MSG("getNextActionFrom1C. FingerprintID: " + fingerprintID + "\n");
 
       }
     } else {
-      DEBUG_MSGF("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+      DEBUG_MSGF("getNextActionFrom1C. [HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
     }
 
     http.end();
@@ -399,7 +401,6 @@ void getNextActionFrom1C(String scannerID, boolean allData) {
 
       if (action == "New") {
         
-        finger.begin(57600);
         finger.LEDcontrol(FINGERPRINT_LED_ON, 0, FINGERPRINT_LED_BLUE);
 
         LedPrint("Сканирование отпечатка\nпальца:\n" + employee, 0, 0, 1);

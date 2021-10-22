@@ -26,6 +26,7 @@
 
 ESP8266WebServer webServer(80);
 Ticker ticker;
+Ticker fingerprintStateWaiting;
 
 boolean settingsMode = false;
 boolean runWiFiAP = false;
@@ -46,52 +47,63 @@ volatile boolean makeRequestOnSheduleIn1C = false;
 #include "Fingerprint.h"
 #include "Adafruit_I2CDevice.h"
 
+void fingerprintStateWaitingEnd();
+
 ISR_PREFIX void onPressedbuttonGetAction()
 {
   if (settingsMode == false)
-  {
     makeRequestIn1C = true;
-  }
 }
 
 ISR_PREFIX void fingerprintState()
 {
-  fingerprintRead = true;
-  
-  DEBUG_MSGF("fingerprintRead: %d\n", fingerprintRead);
+
+  if (!fingerprintStateWaiting.active()) {
+
+    fingerprintRead = true;
+    fingerprintStateWaiting.detach();
+    fingerprintStateWaiting.attach(2, fingerprintStateWaitingEnd);
+  }
+  DEBUG_MSGF("fingerprintState. fingerprintRead: %d\n", fingerprintRead);
 }
 
 void setup()
 {
 
+  DEBUG_BEGIN
+  DEBUG_MSG("\n");
+
   finger.begin(57600);
+  delay(1000);
   finger.LEDcontrol(false);
+  
+  finger.getParameters();
+  DEBUG_MSGF("setup. finger.security_level: '%d'\n", finger.security_level);
+  DEBUG_MSGF("setup. finger.capacity: '%d'\n", finger.capacity);
 
   String dots = "";
 
   beeper(2);
-
-  DEBUG_BEGIN
-  DEBUG_MSGF("\n");
 
   InitConfig();
   LoadConfig();
   PrintConfig();
 
   InitLED();
+
   LedPrint("Загрузка");
 
-  DEBUG_MSGF("settingsMode: '%d'\n", settingsMode);
+  DEBUG_MSGF("setup. settingsMode: '%d'\n", settingsMode);
 
   //Если сделали сброс настроек тогда включим режим AP, чтобы можно было подключиться и указать параметры подключения к точке доступа
   if (checkResetFlag() || runWiFiAP)
   {
-
+    
     settingsMode = true;
-    DEBUG_MSGF("settingsMode: '%d'\n", settingsMode);
+    DEBUG_MSGF("setup. settingsMode: '%d'\n", settingsMode);
 
     //Do the firmware reset here
-    DEBUG_MSGF("Reset Firmware\n");
+    DEBUG_MSGF("setup. Reset Firmware\n");
 
     run_WiFi_AP();
 
@@ -114,7 +126,7 @@ void setup()
     }
 
     settingsMode = false;
-    DEBUG_MSGF("settingsMode: '%d'\n", settingsMode);
+    DEBUG_MSGF("setup. settingsMode: '%d'\n", settingsMode);
 
     //Включим точку доступа
     run_WiFi_STA();
@@ -150,15 +162,27 @@ void loop()
     {
       getActionFrom1C(false);
       makeRequestOnSheduleIn1C = false;
+
+      delay(1000);
+      fingerprintRead = false;
     }
     else if (fingerprintRead == true)
     {
+      DEBUG_MSGF("loop. fingerprintRead: %d\n", fingerprintRead);
+
       int fingerprintID = readFingerprintIDez();
 
       if (fingerprintID < 0)
       {
         finger.LEDcontrol(FINGERPRINT_LED_ON, 0, FINGERPRINT_LED_RED);
-        LedPrint("Отказ (" + String(finger.confidence) + ")", 40, 30);
+
+        if (fingerprintID == -1) {
+
+          LedPrint("Отказ", 40, 30);
+        } else{
+          LedPrint("Отказ (" + String(-1 * fingerprintID) + "%)", 40, 30);
+        }
+
         beeper(2);
         delay(1000);
         finger.LEDcontrol(FINGERPRINT_LED_OFF, 0, FINGERPRINT_LED_RED);
@@ -181,4 +205,9 @@ void loop()
     LedPrint();
   }
   delay(100);
+}
+
+void fingerprintStateWaitingEnd(){
+
+  fingerprintStateWaiting.detach();
 }

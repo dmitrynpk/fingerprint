@@ -22,7 +22,7 @@ void InitLED() {
   display.fillRect(0, 0, 128, 96);
   display.display();
 
-  delay(20000);
+  delay(1000);
 }
 
 void LedPrint(String S = "", int x = 0, int y = 0, boolean stateUpdateFrom1C = false) {

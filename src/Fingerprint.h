@@ -10,9 +10,8 @@ SoftwareSerial mySerial(2, 3);
 
 Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
 
-uint8_t getFingerprintID() {
 
-  finger.begin(57600);
+uint8_t getFingerprintID() {
   
   uint8_t p = finger.getImage();
   if (p != FINGERPRINT_OK)  return -1;
@@ -31,11 +30,7 @@ uint8_t getFingerprintEnroll(int fingerprintID) {
   uint8_t p;
   uint32_t starttime;
 
-  DEBUG_MSG("fingerprintRead: ");
-  DEBUG_MSG(fingerprintRead);
-  DEBUG_MSG("\n");
-  
-  finger.begin(57600);
+  DEBUG_MSGF("getFingerprintEnroll. fingerprintRead: %d\n", fingerprintRead);
   
   //Считываем палец
 
@@ -57,6 +52,7 @@ uint8_t getFingerprintEnroll(int fingerprintID) {
     return p;
   }
 
+  delay(1000);
   beeper(1);
 
   LedPrint("Уберите палец");
@@ -82,7 +78,11 @@ uint8_t getFingerprintEnroll(int fingerprintID) {
     return p;
   }
   
+  delay(1000);
+
   //Считываем изображение повторно
+  
+  fingerprintStateWaiting.detach();
 
   LedPrint("Повторно приложите\nпалец");
 
@@ -102,6 +102,7 @@ uint8_t getFingerprintEnroll(int fingerprintID) {
     return p;
   }
   
+  delay(1000);
   beeper(1);
 
   LedPrint("Уберите палец");
@@ -160,23 +161,23 @@ int readFingerprintIDez() {//Чтение идентификатора отпе�
   int fingerprintID = getFingerprintID();
   int confidence    = finger.confidence;
 
-  DEBUG_MSG("readFingerprintIDez:\n");
-  DEBUG_MSGF("  finger capacity: %d\n", finger.capacity);
-  DEBUG_MSGF("  fingerprintID: %d\n", fingerprintID);
-  DEBUG_MSGF("  confidence: %d\n", confidence);
+  DEBUG_MSGF("readFingerprintIDez. finger capacity: %d\n", finger.capacity);
+  DEBUG_MSGF("readFingerprintIDez. fingerprintID: %d\n", fingerprintID);
+  DEBUG_MSGF("readFingerprintIDez. confidence: %d\n", confidence);
 
-
-  if (confidence < 50 || fingerprintID >= finger.capacity) {
-
+  if (fingerprintID >= finger.capacity) {
+    
     fingerprintID = -1;
+
+  } else if (confidence < 10) {
+
+    fingerprintID = -1 * confidence;
   }
   
   return fingerprintID;
 }
 
 uint8_t deleteFingerprint(uint8_t fingerprintID) {//Удалить отпечаток пальца из сканера
-
-  finger.begin(57600);
   
   if (! finger.verifyPassword()) {
     return FINGERPRINT_PACKETRECIEVEERR;
@@ -188,8 +189,6 @@ uint8_t deleteFingerprint(uint8_t fingerprintID) {//Удалить отпеча�
 }
 
 uint8_t clearFingerprintScanner() {//Очистка сканера
-
-  finger.begin(57600);
   
   if (! finger.verifyPassword()) {
     return FINGERPRINT_PACKETRECIEVEERR;

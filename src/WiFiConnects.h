@@ -2,13 +2,7 @@
 #define WiFiConnects_H
 
 #include "ExchangeWith1C.h"
-
 #include <ESP8266WiFi.h>
-
-extern "C" {
-#include "user_interface.h"
-#include "wpa2_enterprise.h"
-}
 
 Ticker WifiWinker;
 
@@ -46,7 +40,9 @@ void run_WiFi_STA() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(config.ssid, config.pass);
   delay(500);
-  
+  WiFi.config(0U, 0U, 0U);
+  delay(500);
+
   DEBUG_MSGF("Connecting to '%s'", config.ssid);
   String dots = "";
   while (WiFi.status() != WL_CONNECTED) {
@@ -63,13 +59,14 @@ void run_WiFi_STA() {
   
   DEBUG_MSGF("\nConnected, IP address: ");
   DEBUG_MSG(WiFi.localIP());
-
+  DEBUG_MSG("\n");
+  
   updateDateFrom1C();
   
   stateWiFiBlink = true;
   updateDate.attach(3600, updateDateFrom1C);
 
-  LedPrint("Подключено:\n" + WiFi.localIP().toString());
+  LedPrint("Подключено: " + WiFi.localIP().toString());
   delay(1000);
   LedClear();
   
