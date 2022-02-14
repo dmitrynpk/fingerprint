@@ -75,7 +75,6 @@ void setup()
 
   finger.begin(57600);
   delay(1000);
-  finger.LEDcontrol(false);
   
   finger.getParameters();
   DEBUG_MSGF("setup. finger.security_level: '%d'\n", finger.security_level);
@@ -174,25 +173,20 @@ void loop()
 
       if (fingerprintID < 0)
       {
-        finger.LEDcontrol(FINGERPRINT_LED_ON, 0, FINGERPRINT_LED_RED);
-
         if (fingerprintID == -1) {
 
-          LedPrint("Отказ", 40, 30);
+          LedPrint("Отказ", 35, 0, 2);
         } else{
-          LedPrint("Отказ (" + String(-1 * fingerprintID) + "%)", 40, 30);
+          LedPrint("Отказ (" + String(-1 * fingerprintID) + "%)", 35, 0, 2);
         }
 
         beeper(2);
         delay(1000);
-        finger.LEDcontrol(FINGERPRINT_LED_OFF, 0, FINGERPRINT_LED_RED);
       }
       else
       {
-        finger.LEDcontrol(FINGERPRINT_LED_ON, 0, FINGERPRINT_LED_BLUE);
         beeper(1);
         delay(1000);
-        finger.LEDcontrol(FINGERPRINT_LED_OFF, 0, FINGERPRINT_LED_BLUE);
         sendFingerprintIDTo1C(fingerprintID);
       }
       fingerprintRead = false;

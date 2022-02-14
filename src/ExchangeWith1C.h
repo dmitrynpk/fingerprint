@@ -20,7 +20,7 @@ String connectTo1C() {
   const size_t numberOfHeaders = 1;
   String scannerID;
 
-  LedPrint("", 0, 0, true);
+  LedPrint("", 0, 0, 1, true);
   
   String macAddress = WiFi.macAddress();
 
@@ -72,7 +72,7 @@ void disconnectFrom1C(String scannerID) {
 
   DEBUG_MSG("disconnectFrom1C. [HTTP] begin disconnectFrom1C...\n");
 
-  LedPrint("", 0, 0, true);
+  LedPrint("", 0, 0, 1, true);
   
   boolean answer = http.begin(client, web_address + "disconnect");
   http.addHeader("Content-Type", "text/plain");
@@ -129,7 +129,7 @@ void sendFingerprintIDTo1C(int fingerprintID) {
 
     DEBUG_MSGF("sendFingerprintIDTo1C. [HTTP] begin sendFingerprint...\n");
 
-    LedPrint("", 0, 0, true);
+    LedPrint("", 0, 0, 1, true);
     
     http.begin(client, web_address + "sendFingerprintID");
     http.addHeader("Content-Type", "text/plain");
@@ -158,14 +158,14 @@ void sendFingerprintIDTo1C(int fingerprintID) {
         
         if (mark == "Начало смены") {
           
-          LedPrint("Начало смены", 30, 2);
+          LedPrint("Начало\n   смены", 30, 0, 2);
         }else {
           
-          LedPrint("Окончание смены", 10, 2);
+          LedPrint("Окончание\n   смены", 10, 0, 2);
         }
         
         delay(1000);
-        LedPrint(employee, 0, 2);
+        LedPrint(employee, 0, 0, 2);
         delay(1000);
         LedClear();
       }
@@ -195,7 +195,7 @@ int getActionQuantityFrom1C(String scannerID, boolean allData) {
 
   DEBUG_MSGF("getActionQuantityFrom1C. [HTTP] begin getActionQuantity...\n");
 
-  LedPrint("", 0, 0, true);
+  LedPrint("", 0, 0, 1, true);
   
   boolean answer = http.begin(client, web_address + "getActionQuantity");
   http.addHeader("Content-Type", "text/plain");
@@ -243,7 +243,7 @@ void sendFingerprintTo1C(String scannerID, String employee, uint8_t fingerprintI
 
   DEBUG_MSGF("sendFingerprintTo1C. [HTTP] begin sendFingerprint...\n");
 
-  LedPrint("", 0, 0, true);
+  LedPrint("", 0, 0, 1, true);
   
   http.begin(client, web_address + "sendFingerprint");
   http.addHeader("Content-Type", "application/octet-stream");
@@ -284,7 +284,7 @@ void sendFingerprintDeleted(String scannerID, String employee, String fingerprin
 
   DEBUG_MSGF("sendFingerprintDeleted. [HTTP] begin sendFingerprintDeleted...\n");
 
-  LedPrint("", 0, 0, true);
+  LedPrint("", 0, 0, 1, true);
   
   http.begin(client, web_address + "sendFingerprintDeleted");
   http.addHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -318,7 +318,7 @@ void sendFingerprintScannerCleaned(String scannerID) {
 
   DEBUG_MSGF("sendFingerprintScannerCleaned. [HTTP] begin sendFingerprintScannerCleaned...\n");
 
-  LedPrint("", 0, 0, true);
+  LedPrint("", 0, 0, 1, true);
   
   http.begin(client, web_address + "sendFingerprintScannerCleaned");
   http.addHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -358,7 +358,7 @@ void getNextActionFrom1C(String scannerID, boolean allData) {
 
   DEBUG_MSGF("getNextActionFrom1C. [HTTP] begin getNextAction...\n");
 
-  LedPrint("", 0, 0, true);
+  LedPrint("", 0, 0, 1, true);
   
   boolean answer = http.begin(client, web_address + "getNextAction");
   http.addHeader("Content-Type", "text/plain");

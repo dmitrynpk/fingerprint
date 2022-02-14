@@ -6,10 +6,9 @@
 #include "Other.h"
 #include "ExchangeWith1C.h"
 
-SoftwareSerial mySerial(2, 3);
+SoftwareSerial mySerial(2, 14);
 
 Adafruit_Fingerprint finger = Adafruit_Fingerprint(&mySerial);
-
 
 uint8_t getFingerprintID() {
   

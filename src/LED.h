@@ -3,57 +3,62 @@
 
 #include <SPI.h>
 #include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 
-#include <SSD1306Wire.h>
-#include "fontsRus.h"
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64 // OLED display height, in pixels
 
-SSD1306Wire display(0x3c, D2, D1);
+// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
+#define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 char FontUtf8Rus(const byte ch);
 
 void InitLED() {
   
-  display.init();
-  display.setFontTableLookupFunction(FontUtf8Rus);
-  display.flipScreenVertically();
-
-  display.clear();
-  display.setColor(WHITE);
-  display.fillRect(0, 0, 128, 96);
-  display.display();
-
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   delay(1000);
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  
+  display.cp437(true);
+  display.clearDisplay(); 
+  display.setTextColor(WHITE);
+  display.display();
 }
 
-void LedPrint(String S = "", int x = 0, int y = 0, boolean stateUpdateFrom1C = false) {
+void LedPrint(String S = "", int x = 0, int y = 0, int s = 1, boolean stateUpdateFrom1C = false) {
   
-  display.clear();
+  display.clearDisplay();
 
   // Вывести строку статуса
 
-  display.setFont(ArialRus_Plain_10);
+  display.setTextSize(1);
   
+  display.setCursor(0, 0);
+
   if (stateWiFiBlink) {
-    display.drawString(0, 0, "!");
+    display.print("\xAD ");
   }else{
-    display.drawString(0, 0, " ");
+    display.print("  ");
   }
 
   if (stateUpdateFrom1C) {
-    display.drawString(2, 0, "*");
+    display.print("\xAC ");
   }else{
-    display.drawString(2, 0, " ");
+    display.print("  ");
   }
   
   String sDate = dt.getDate();
   
-  display.drawString(20, 0, sDate);    
+  display.println(utf8rus(sDate));    
 
   // Вывести данные
   
-  display.setFont(ArialRus_Plain_10);
+  display.setCursor(x, y + 16);
+  display.setTextSize(s);
   
-  display.drawString(0, 10, S);
+  display.println(utf8rus(S));
   display.display();
 }
 
